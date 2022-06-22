@@ -28,7 +28,7 @@ class BatteryState {
 		let validParameterRange = true;
 		ranges?.forEach((range) => {
 			if (value >= range.min && value < range.max) {
-				validParameterRange = range.validRange;
+				validParameterRange = range.validRange || false;
 				BatteryState.printMessage(range.message);
 			}
 		});

@@ -1,4 +1,5 @@
 class SOC {
+	static name = 'State of Charge';
 	static min = 20;
 	static max = 80;
 	static thresoldPercentage = 5;
@@ -8,38 +9,10 @@ class SOC {
 		this.value = value;
 	}
 }
-SOC.prototype.ranges = [
-	{
-		min: 0,
-		max: SOC.min,
-		message: 'State of charge out of range. Low SOC Breach',
-	},
-	{
-		min: SOC.min,
-		max: SOC.min + SOC.warningThresold,
-		message: 'Warning: State of charge Approaching discharge',
-		validRange: true,
-	},
-	{
-		min: SOC.min + SOC.warningThresold,
-		max: SOC.max - SOC.warningThresold,
-		// message: 'Normal SOC State',
-		validRange: true,
-	},
-	{
-		min: SOC.max - SOC.warningThresold,
-		max: SOC.max,
-		message: 'Warning: State of charge Approaching charge-peak',
-		validRange: true,
-	},
-	{
-		min: SOC.max,
-		max: Infinity,
-		message: 'State of charge out of range. High SOC Breach',
-	},
-];
+SOC.prototype.ranges = getRanges(SOC);
 
 class Temperature {
+	static name = 'Temperature';
 	static min = 0;
 	static max = 45;
 	static thresoldPercentage = 5;
@@ -56,38 +29,10 @@ class Temperature {
 		return ((farenheit - 32) * 5) / 9;
 	}
 }
-Temperature.prototype.ranges = [
-	{
-		min: 0,
-		max: Temperature.min,
-		message: 'Temperature out of range. Low Temperature Breach',
-	},
-	{
-		min: Temperature.min,
-		max: Temperature.min + Temperature.warningThresold,
-		message: 'Warning: Temperature Approaching discharge',
-		validRange: true,
-	},
-	{
-		min: Temperature.min + Temperature.warningThresold,
-		max: Temperature.max - Temperature.warningThresold,
-		// message: 'Normal Temperature State',
-		validRange: true,
-	},
-	{
-		min: Temperature.max - Temperature.warningThresold,
-		max: Temperature.max,
-		message: 'Warning: Temperature Approaching charge-peak',
-		validRange: true,
-	},
-	{
-		min: Temperature.max,
-		max: Infinity,
-		message: 'Temperature out of range. High Temperature Breach',
-	},
-];
+Temperature.prototype.ranges = getRanges(Temperature);
 
 class ChargeRate {
+	static name = 'ChargeRate';
 	static min = -Infinity;
 	static max = 0.8;
 	static thresoldPercentage = 5;
@@ -97,24 +42,38 @@ class ChargeRate {
 		this.value = value;
 	}
 }
-ChargeRate.prototype.ranges = [
-	{
-		min: ChargeRate.min,
-		max: ChargeRate.max - ChargeRate.warningThresold,
-		// message: 'Normal Charge Rate State',
-		validRange: true,
-	},
-	{
-		min: ChargeRate.max - ChargeRate.warningThresold,
-		max: ChargeRate.max,
-		message: 'Warning: Charge Rate Approaching charge-peak',
-		validRange: true,
-	},
-	{
-		min: ChargeRate.max,
-		max: Infinity,
-		message: 'Charge Rate out of range. High Charge Rate Breach',
-	},
-];
+ChargeRate.prototype.ranges = getRanges(ChargeRate);
 
+function getRanges(Parameter) {
+	return [
+		{
+			min: 0,
+			max: Parameter.min,
+			message: `${Parameter.name} out of range. Low ${Parameter.name} Breach`,
+		},
+		{
+			min: Parameter.min,
+			max: Parameter.min + Parameter.warningThresold,
+			message: `Warning: ${Parameter.name} Approaching Low`,
+			validRange: true,
+		},
+		{
+			min: Parameter.min + Parameter.warningThresold,
+			max: Parameter.max - Parameter.warningThresold,
+			// message: `Normal ${Parameter.name} State`,
+			validRange: true,
+		},
+		{
+			min: Parameter.max - Parameter.warningThresold,
+			max: Parameter.max,
+			message: `Warning: ${Parameter.name} Approaching Peak`,
+			validRange: true,
+		},
+		{
+			min: Parameter.max,
+			max: Infinity,
+			message: `${Parameter.name} out of range. High ${Parameter.name} Breach`,
+		},
+	];
+}
 module.exports = { Temperature, SOC, ChargeRate };

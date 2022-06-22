@@ -1,7 +1,6 @@
 const translate = require('@vitalets/google-translate-api');
 
 class BatteryState {
-	isBatteryStateOk = false;
 	constructor(temperature, stateOfCharge, chargeRate, ...parameters) {
 		this.temperature = temperature;
 		this.stateOfCharge = stateOfCharge;
@@ -26,9 +25,9 @@ class BatteryState {
 	}
 	static checkParameterRange(value, ranges) {
 		let validParameterRange = true;
-		ranges?.forEach((range) => {
+		ranges.forEach((range) => {
 			if (value >= range.min && value < range.max) {
-				validParameterRange = range.validRange || false;
+				validParameterRange = range.validRange;
 				BatteryState.printMessage(range.message);
 			}
 		});

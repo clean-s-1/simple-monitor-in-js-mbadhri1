@@ -50,6 +50,7 @@ function getRanges(Parameter) {
 			min: 0,
 			max: Parameter.min,
 			message: `${Parameter.name} out of range. Low ${Parameter.name} Breach`,
+			validRange: false,
 		},
 		{
 			min: Parameter.min,
@@ -73,6 +74,7 @@ function getRanges(Parameter) {
 			min: Parameter.max,
 			max: Infinity,
 			message: `${Parameter.name} out of range. High ${Parameter.name} Breach`,
+			validRange: false,
 		},
 	];
 }

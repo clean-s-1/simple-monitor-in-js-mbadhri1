@@ -1,54 +1,9 @@
 const { Temperature, SOC, ChargeRate } = require('./batteryParameter');
 const { expect } = require('chai');
-const translate = require('@vitalets/google-translate-api');
+const { BatteryState } = require('./batteryState');
 
 globalLanguage = 'en';
-class BatteryState {
-	isBatteryStateOk = false;
-	constructor(temperature, stateOfCharge, chargeRate, ...parameters) {
-		this.temperature = temperature;
-		this.stateOfCharge = stateOfCharge;
-		this.chargeRate = chargeRate;
-		this.isBatteryStateOk = BatteryState.chackBatteryStatus(
-			temperature,
-			stateOfCharge,
-			chargeRate,
-			...parameters
-		);
-	}
-	static chackBatteryStatus(...parameters) {
-		let validState = true;
-		parameters.forEach((parametrer) => {
-			validState =
-				validState &&
-				BatteryState.checkParameterRange(parametrer.value, parametrer.ranges);
-		});
-		return validState;
-	}
-	static checkParameterRange(value, ranges) {
-		let validParameterRange = true;
-		ranges?.forEach((range) => {
-			if (value >= range.min && value < range.max) {
-				if (!range.validRange) {
-					validParameterRange = false;
-				}
-				if (range.message) {
-					BatteryState.printMessage(range.message);
-				}
-			}
-		});
-		return validParameterRange;
-	}
-	static printMessage(message) {
-		translate(message, {
-			to: globalLanguage,
-		})
-			.then((res) => console.log(res.text))
-			.catch((err) => {
-				console.error(err);
-			});
-	}
-}
+
 let batteryState;
 batteryState = new BatteryState(
 	new Temperature(25),
@@ -102,6 +57,6 @@ expect(batteryState.isBatteryStateOk).to.be.false;
 batteryState = new BatteryState(
 	new Temperature(99, 'farenheit'),
 	new SOC(81),
-	new ChargeRate(0.4)
+	new ChargeRate(0.78)
 );
 expect(batteryState.isBatteryStateOk).to.be.false;

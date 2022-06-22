@@ -4,7 +4,7 @@ class SOC {
 	static max = 80;
 	static thresoldPercentage = 5;
 	static warningThresold = (SOC.max * SOC.thresoldPercentage) / 100;
-
+	static enableWarning = true;
 	constructor(value) {
 		this.value = value;
 	}
@@ -18,6 +18,8 @@ class Temperature {
 	static thresoldPercentage = 5;
 	static warningThresold =
 		(Temperature.max * Temperature.thresoldPercentage) / 100;
+	static enableWarning = true;
+
 	constructor(value, unit = 'celcius') {
 		this.value = value;
 		if (unit === 'farenheit') {
@@ -38,6 +40,8 @@ class ChargeRate {
 	static thresoldPercentage = 5;
 	static warningThresold =
 		(ChargeRate.max * ChargeRate.thresoldPercentage) / 100;
+	static enableWarning = true;
+
 	constructor(value) {
 		this.value = value;
 	}
@@ -45,7 +49,7 @@ class ChargeRate {
 ChargeRate.prototype.ranges = getRanges(ChargeRate);
 
 function getRanges(Parameter) {
-	return [
+	let ranges = [
 		{
 			min: 0,
 			max: Parameter.min,
@@ -53,21 +57,9 @@ function getRanges(Parameter) {
 			validRange: false,
 		},
 		{
-			min: Parameter.min,
-			max: Parameter.min + Parameter.warningThresold,
-			message: `Warning: ${Parameter.name} Approaching Low`,
-			validRange: true,
-		},
-		{
 			min: Parameter.min + Parameter.warningThresold,
 			max: Parameter.max - Parameter.warningThresold,
 			// message: `Normal ${Parameter.name} State`,
-			validRange: true,
-		},
-		{
-			min: Parameter.max - Parameter.warningThresold,
-			max: Parameter.max,
-			message: `Warning: ${Parameter.name} Approaching Peak`,
 			validRange: true,
 		},
 		{
@@ -77,5 +69,22 @@ function getRanges(Parameter) {
 			validRange: false,
 		},
 	];
+	if (Parameter.enableWarning) {
+		ranges.push(
+			{
+				min: Parameter.min,
+				max: Parameter.min + Parameter.warningThresold,
+				message: `Warning: ${Parameter.name} Approaching Low`,
+				validRange: true,
+			},
+			{
+				min: Parameter.max - Parameter.warningThresold,
+				max: Parameter.max,
+				message: `Warning: ${Parameter.name} Approaching Peak`,
+				validRange: true,
+			}
+		);
+	}
+	return ranges;
 }
 module.exports = { Temperature, SOC, ChargeRate };

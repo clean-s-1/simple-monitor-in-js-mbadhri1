@@ -19,19 +19,25 @@ class BatteryState {
 	static chackBatteryStatus(...parameters) {
 		let validState = true;
 		parameters.forEach((parametrer) => {
-			// console.log(parametrer);
-			parametrer?.ranges?.forEach((range) => {
-				if (parametrer.value >= range.min && parametrer.value < range.max) {
-					if (!range.validRange) {
-						validState = false;
-					}
-					if (range.message) {
-						BatteryState.printMessage(range.message);
-					}
-				}
-			});
+			validState =
+				validState &&
+				BatteryState.checkParameterRange(parametrer.value, parametrer.ranges);
 		});
 		return validState;
+	}
+	static checkParameterRange(value, ranges) {
+		let validParameterRange = true;
+		ranges?.forEach((range) => {
+			if (value >= range.min && value < range.max) {
+				if (!range.validRange) {
+					validParameterRange = false;
+				}
+				if (range.message) {
+					BatteryState.printMessage(range.message);
+				}
+			}
+		});
+		return validParameterRange;
 	}
 	static printMessage(message) {
 		translate(message, {

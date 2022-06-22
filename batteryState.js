@@ -31,21 +31,17 @@ class BatteryState {
 				if (!range.validRange) {
 					validParameterRange = false;
 				}
-				if (range.message) {
-					BatteryState.printMessage(range.message);
-				}
+				BatteryState.printMessage(range.message);
 			}
 		});
 		return validParameterRange;
 	}
 	static printMessage(message) {
-		translate(message, {
-			to: globalLanguage,
-		})
-			.then((res) => console.log(res.text))
-			.catch((err) => {
-				console.error(err);
-			});
+		if (message) {
+			translate(message, {
+				to: globalLanguage,
+			}).then((res) => console.log(res.text));
+		}
 	}
 }
 module.exports = { BatteryState };

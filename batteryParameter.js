@@ -51,7 +51,7 @@ ChargeRate.prototype.ranges = getRanges(ChargeRate);
 function getRanges(Parameter) {
 	let ranges = [
 		{
-			min: 0,
+			min: -Infinity,
 			max: Parameter.min,
 			message: `${Parameter.name} out of range. Low ${Parameter.name} Breach`,
 			validRange: false,

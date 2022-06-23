@@ -60,3 +60,31 @@ batteryState = new BatteryState(
 	new ChargeRate(0.78)
 );
 expect(batteryState.isBatteryStateOk).to.be.false;
+
+batteryState = new BatteryState(
+	new Temperature(2),
+	new SOC(22),
+	new ChargeRate(0.78)
+);
+expect(batteryState.isBatteryStateOk).to.be.true;
+
+batteryState = new BatteryState(
+	new Temperature(44),
+	new SOC(77),
+	new ChargeRate(0.2)
+);
+expect(batteryState.isBatteryStateOk).to.be.true;
+
+batteryState = new BatteryState(
+	new Temperature(-1),
+	new SOC(11),
+	new ChargeRate(-0.1)
+);
+expect(batteryState.isBatteryStateOk).to.be.false;
+
+batteryState = new BatteryState(
+	new Temperature(47),
+	new SOC(84),
+	new ChargeRate(0.9)
+);
+expect(batteryState.isBatteryStateOk).to.be.false;
